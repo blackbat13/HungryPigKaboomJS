@@ -69,16 +69,25 @@
         pig.vy = 0;
         pig.v = 3;
 
-        onKeyPress("right", () => {
-            pig.vx = pig.v;
-            pig.vy = 0;
-            pig.use(sprite("pig_right"));
+        onUpdate("pig", () => {
+            pig.pos.x += pig.vx;
+            pig.pos.y += pig.vy;
+
+            if (pig.pos.x < 0 || pig.pos.x > width() || pig.pos.y < 0 || pig.pos.y > height()) {
+                go("game_over", points);
+            }
         });
 
         onKeyPress("left", () => {
             pig.vx = -pig.v;
             pig.vy = 0;
             pig.use(sprite("pig_left"));
+        });
+
+        onKeyPress("right", () => {
+            pig.vx = pig.v;
+            pig.vy = 0;
+            pig.use(sprite("pig_right"));
         });
 
         onKeyPress("up", () => {
@@ -116,15 +125,6 @@
             pointsLabel.text = points;
             pig.v += 0.8;
             play("pig");
-        });
-
-        onUpdate(() => {
-            pig.pos.x += pig.vx;
-            pig.pos.y += pig.vy;
-
-            if (pig.pos.x < 0 || pig.pos.x > width() || pig.pos.y < 0 || pig.pos.y > height()) {
-                go("game_over", points);
-            }
         });
     });
 
@@ -165,7 +165,7 @@
         onKeyPress("space", () => {
             go("game");
         });
-    })
+    });
 
     go("start");
 
