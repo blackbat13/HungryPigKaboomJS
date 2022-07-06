@@ -62,7 +62,7 @@
             pos(center()),
             origin("center"),
             area(),
-            "pig"
+            "pig",
         ]);
 
         pig.vx = 0;
@@ -107,7 +107,7 @@
             pos(200, 200),
             origin("center"),
             area(),
-            "beet"
+            "beet",
         ]);
 
         let points = 0;
@@ -121,10 +121,10 @@
         pig.onCollide("beet", () => {
             beet.pos.x = rand(50, width() - 50);
             beet.pos.y = rand(50, height() - 50);
-            points += 1;
-            pointsLabel.text = points;
             pig.v += 0.8;
             play("pig");
+            points += 1;
+            pointsLabel.text = points;
         });
     });
 
