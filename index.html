@@ -1,0 +1,176 @@
+<script type="module">
+    import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
+
+    kaboom({
+        width: 800,
+        height: 800,
+    });
+
+    loadSprite("bg", "images/bg.png");
+    loadSprite("pig_down", "images/pig_down.png");
+    loadSprite("pig_up", "images/pig_up.png");
+    loadSprite("pig_left", "images/pig_left.png");
+    loadSprite("pig_right", "images/pig_right.png");
+    loadSprite("pig_dead", "images/pig_dead.png");
+    loadSprite("beet", "images/beetroot.png");
+
+    loadSound("pig", "sounds/pig.wav");
+
+    scene("start", () => {
+        add([
+            sprite("bg"),
+            pos(0, 0),
+        ]);
+
+        add([
+            text("Hungry Pig", {
+                size: 80,
+                font: "sinko",
+            }),
+            pos(width() / 2, height() / 5),
+            origin("center"),
+        ]);
+
+        add([
+            text("Use arrows to control the pig and eat as many beetroots as you can!", {
+                size: 45,
+                width: width(),
+            }),
+            pos(center()),
+            origin("center"),
+        ]);
+
+        add([
+            text("Press SPACE to start", {
+                size: 50,
+            }),
+            pos(width() / 2, 3 * height() / 4),
+            origin("center"),
+        ]);
+
+        onKeyPress("space", () => {
+            go("game");
+        });
+    });
+
+    scene("game", () => {
+        add([
+            sprite("bg"),
+            pos(0, 0),
+        ]);
+
+        const pig = add([
+            sprite("pig_down"),
+            pos(center()),
+            origin("center"),
+            area(),
+            "pig"
+        ]);
+
+        pig.vx = 0;
+        pig.vy = 0;
+        pig.v = 3;
+
+        function moveRight() {
+            pig.vx = pig.v;
+            pig.vy = 0;
+        }
+
+        function moveLeft() {
+            pig.vx = -pig.v;
+            pig.vy = 0;
+        }
+
+        function moveUp() {
+            pig.vx = 0;
+            pig.vy = -pig.v;
+        }
+
+        function moveDown() {
+            pig.vx = 0;
+            pig.vy = pig.v;
+        }
+
+        onKeyPress("right", moveRight);
+        onKeyPress("left", moveLeft);
+        onKeyPress("up", moveUp);
+        onKeyPress("down", moveDown);
+
+        const beet = add([
+            sprite("beet"),
+            pos(200, 200),
+            origin("center"),
+            area(),
+            "beet"
+        ]);
+
+        let points = 0;
+
+        const pointsLabel = add([
+            text(points),
+            pos(width() / 2, 50),
+            origin("center"),
+        ]);
+
+        pig.onCollide("beet", () => {
+            beet.pos.x = rand(50, width() - 50);
+            beet.pos.y = rand(50, height() - 50);
+            points += 1;
+            pointsLabel.text = points;
+            pig.v += 0.8;
+            play("pig");
+        });
+
+        onUpdate(() => {
+            pig.pos.x += pig.vx;
+            pig.pos.y += pig.vy;
+
+            if (pig.pos.x < 0 || pig.pos.x > width() || pig.pos.y < 0 || pig.pos.y > height()) {
+                go("game_over", points);
+            }
+        });
+    });
+
+    scene("game_over", (points) => {
+        add([
+            sprite("bg"),
+            pos(0, 0),
+        ]);
+
+        add([
+            text(points),
+            pos(width() / 2, 50),
+            origin("center"),
+        ]);
+
+        add([
+            sprite("pig_dead"),
+            pos(width() / 2, height() / 3),
+            origin("center"),
+        ]);
+
+        add([
+            text("GAME OVER", {
+                size: 100,
+                font: "sinko",
+            }),
+            pos(center()),
+            origin("center"),
+        ]);
+
+        add([
+            text("Press SPACE to try again", {
+                size: 50,
+            }),
+            pos(width() / 2, 2 * height() / 3),
+            origin("center"),
+        ]);
+
+        onKeyPress("space", () => {
+            go("game");
+        });
+    })
+
+    go("start");
+
+</script>
