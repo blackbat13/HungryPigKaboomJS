@@ -19,7 +19,6 @@
     scene("start", () => {
         add([
             sprite("bg"),
-            pos(0, 0),
         ]);
 
         add([
@@ -56,7 +55,6 @@
     scene("game", () => {
         add([
             sprite("bg"),
-            pos(0, 0),
         ]);
 
         const pig = add([
@@ -71,30 +69,29 @@
         pig.vy = 0;
         pig.v = 3;
 
-        function moveRight() {
+        onKeyPress("right", () => {
             pig.vx = pig.v;
             pig.vy = 0;
-        }
+            pig.use(sprite("pig_right"));
+        });
 
-        function moveLeft() {
+        onKeyPress("left", () => {
             pig.vx = -pig.v;
             pig.vy = 0;
-        }
+            pig.use(sprite("pig_left"));
+        });
 
-        function moveUp() {
+        onKeyPress("up", () => {
             pig.vx = 0;
             pig.vy = -pig.v;
-        }
+            pig.use(sprite("pig_up"));
+        });
 
-        function moveDown() {
+        onKeyPress("down", () => {
             pig.vx = 0;
             pig.vy = pig.v;
-        }
-
-        onKeyPress("right", moveRight);
-        onKeyPress("left", moveLeft);
-        onKeyPress("up", moveUp);
-        onKeyPress("down", moveDown);
+            pig.use(sprite("pig_down"));
+        });
 
         const beet = add([
             sprite("beet"),
@@ -134,7 +131,6 @@
     scene("game_over", (points) => {
         add([
             sprite("bg"),
-            pos(0, 0),
         ]);
 
         add([
